@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 
 import hikari
 import lightbulb
+import extensions
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -11,9 +12,13 @@ if not TOKEN:
 
 bot = hikari.GatewayBot(TOKEN)
 client = lightbulb.client_from_app(bot)
-bot.subscribe(hikari.StartingEvent, client.start)
 
-client.load_extensions("extensions")
+@bot.listen(hikari.StartingEvent)
+async def on_starting(_: hikari.StartingEvent) -> None:
+    # Load any extensions
+    await client.load_extensions_from_package(extensions)
+    # Start the bot and sync commands
+    await client.start()
 
 if __name__ == "__main__":
     bot.run()
