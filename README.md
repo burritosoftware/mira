@@ -1,2 +1,2 @@
 # mira
-A BART Text-To-Speech Discord Bot
+A module text-to-speech Discord bot for public transit systems (mainly Bay Area Rapid Transit).

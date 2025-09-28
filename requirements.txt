@@ -1,0 +1,7 @@
+hikari
+hikari-lightbulb
+python-dotenv
+
+# Used by Natural Readers
+httpx
+httpx-auth
