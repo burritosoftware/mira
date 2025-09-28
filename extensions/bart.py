@@ -8,7 +8,7 @@ from helpers import (
 
 loader = lightbulb.Loader()
 
-@loader.register
+@loader.command
 class George(
     lightbulb.SlashCommand,
     name="george",
@@ -22,7 +22,7 @@ class George(
         wav = await lucent.synthesize(text=self.text, voice="John-TED :: John-TED")
         await ctx.respond(attachments=[hikari.Bytes(wav, "george.wav")])
 
-@loader.register
+@loader.command
 class Gracie(
     lightbulb.SlashCommand,
     name="gracie",
@@ -36,7 +36,7 @@ class Gracie(
         wav = await lucent.synthesize(text=self.text, voice="Grace-TED :: Grace-TED")
         await ctx.respond(attachments=[hikari.Bytes(wav, "gracie.wav")])
 
-@loader.register
+@loader.command
 class Sharon(
     lightbulb.SlashCommand,
     name="sharon",
