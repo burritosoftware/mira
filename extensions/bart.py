@@ -1,5 +1,8 @@
 import hikari
 import lightbulb
+import sys
+
+sys.path.append("..")
 
 from helpers import (
     lucent,
