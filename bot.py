@@ -10,7 +10,7 @@ if not TOKEN:
     raise RuntimeError("Put DISCORD_TOKEN in a .env next to bot.py")
 
 bot = hikari.GatewayBot(TOKEN)
-client = lightbulb.client_from_app(bot, default_enabled_guilds=['1037174936046944297'])
+client = lightbulb.client_from_app(bot, default_enabled_guilds=[1037174936046944297])
 
 @bot.listen(hikari.StartingEvent)
 async def on_starting(_: hikari.StartingEvent) -> None:
