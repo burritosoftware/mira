@@ -9,6 +9,7 @@ from helpers import (
 loader = lightbulb.Loader()
 
 @loader.command
+@loader.register
 class George(
     lightbulb.SlashCommand,
     name="george",
@@ -23,6 +24,7 @@ class George(
         await ctx.respond(attachments=[hikari.Bytes(wav, "george.wav")])
 
 @loader.command
+@loader.register
 class Gracie(
     lightbulb.SlashCommand,
     name="gracie",
@@ -37,6 +39,7 @@ class Gracie(
         await ctx.respond(attachments=[hikari.Bytes(wav, "gracie.wav")])
 
 @loader.command
+@loader.register
 class Sharon(
     lightbulb.SlashCommand,
     name="sharon",

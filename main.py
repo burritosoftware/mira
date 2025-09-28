@@ -19,5 +19,4 @@ async def on_starting(_: hikari.StartingEvent) -> None:
     # Start the bot and sync commands
     await client.start()
 
-if __name__ == "__main__":
-    bot.run()
+bot.run()
