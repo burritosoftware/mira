@@ -32,7 +32,7 @@ class George(
         wav = await lucent.synthesize(text=self.text, voice="John-TED :: John-TED")
         await ctx.respond(attachments=[hikari.Bytes(wav, "george.wav")])
 
-@loader.command
+@client.register
 class Gracie(
     lightbulb.SlashCommand,
     name="gracie",
@@ -46,7 +46,7 @@ class Gracie(
         wav = await lucent.synthesize(text=self.text, voice="Grace-TED :: Grace-TED")
         await ctx.respond(attachments=[hikari.Bytes(wav, "gracie.wav")])
 
-@loader.command
+@client.register
 class Sharon(
     lightbulb.SlashCommand,
     name="sharon",
