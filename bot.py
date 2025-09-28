@@ -20,4 +20,5 @@ async def on_starting(_: hikari.StartingEvent) -> None:
 async def on_started(_: hikari.StartedEvent) -> None:
     await client.start()
 
-bot.run()
+if __name__ == "__main__":
+    bot.run()
