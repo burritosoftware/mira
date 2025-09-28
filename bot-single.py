@@ -1,17 +1,24 @@
+import os
+from dotenv import load_dotenv
+
 import hikari
 import lightbulb
-import sys
 
-sys.path.append("..")
+load_dotenv()
+TOKEN = os.getenv("DISCORD_TOKEN")
+if not TOKEN:
+    raise RuntimeError("Put DISCORD_TOKEN in a .env next to bot.py")
+
+bot = hikari.GatewayBot(TOKEN)
+client = lightbulb.client_from_app(bot, default_enabled_guilds=['1037174936046944297'])
+bot.subscribe(hikari.StartingEvent, client.start)
 
 from helpers import (
     lucent,
     naturalreaders
 )
 
-loader = lightbulb.Loader()
-
-@loader.command()
+@client.register
 class George(
     lightbulb.SlashCommand,
     name="george",
@@ -25,7 +32,7 @@ class George(
         wav = await lucent.synthesize(text=self.text, voice="John-TED :: John-TED")
         await ctx.respond(attachments=[hikari.Bytes(wav, "george.wav")])
 
-@loader.command()
+@loader.command
 class Gracie(
     lightbulb.SlashCommand,
     name="gracie",
@@ -39,7 +46,7 @@ class Gracie(
         wav = await lucent.synthesize(text=self.text, voice="Grace-TED :: Grace-TED")
         await ctx.respond(attachments=[hikari.Bytes(wav, "gracie.wav")])
 
-@loader.command()
+@loader.command
 class Sharon(
     lightbulb.SlashCommand,
     name="sharon",
@@ -52,3 +59,6 @@ class Sharon(
         await ctx.defer()
         wav = await naturalreaders.synthesize(text=self.text, voice="21")
         await ctx.respond(attachments=[hikari.Bytes(wav, "sharon.mp3")])
+
+
+bot.run()

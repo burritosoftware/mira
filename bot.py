@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 
 import hikari
 import lightbulb
-import logging
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -12,7 +11,6 @@ if not TOKEN:
 
 bot = hikari.GatewayBot(TOKEN)
 client = lightbulb.client_from_app(bot, default_enabled_guilds=['1037174936046944297'])
-bot.subscribe(hikari.StartingEvent, client.start)
 
 @bot.listen(hikari.StartingEvent)
 async def on_starting(_: hikari.StartingEvent) -> None:
