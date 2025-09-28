@@ -12,16 +12,11 @@ if not TOKEN:
 
 bot = hikari.GatewayBot(TOKEN)
 client = lightbulb.client_from_app(bot, default_enabled_guilds=['1037174936046944297'])
+bot.subscribe(hikari.StartingEvent, client.start)
 
 @bot.listen(hikari.StartingEvent)
 async def on_starting(_: hikari.StartingEvent) -> None:
-    # Load any extensions
     await client.load_extensions("extensions.bart", "extensions.ping")
-    # Start the bot - make sure commands are synced properly
     await client.start()
-
-@bot.listen(hikari.InteractionCreateEvent)
-async def on_interaction(e: hikari.InteractionCreateEvent) -> None:
-    logging.info("Interaction received: %s", type(e.interaction).__name__)
 
 bot.run()
