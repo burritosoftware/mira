@@ -22,55 +22,51 @@ def _balcon_path() -> Path:
         raise BalconNotConfiguredError(f"BALCON_PATH is invalid or not a file: {p}")
     return p
 
-
 async def synthesize(text: str, voice: str) -> bytes:
     """
-    Synthesize `text` via Balcon using either SAPI4 or SAPI5 automatically.
-    If STDOUT output is available (SAPI5), use it; otherwise fall back to temp WAV (SAPI4).
-
-    Raises:
-        BalconNotConfiguredError
-        SynthesisError
+    Auto: try SAPI5 via STDOUT (-o); on failure/empty output, fall back to SAPI4 temp WAV (-w).
+    Returns WAV bytes either way.
     """
     balcon: Final[Path] = _balcon_path()
 
-    tmp = tempfile.NamedTemporaryFile(prefix="balcon_", suffix=".wav", delete=False)
-    tmp_path = Path(tmp.name)
-    tmp.close()
-
-    # Provide both -o and -w so SAPI5 uses STDOUT and SAPI4 uses file output.
-    cmd = [
-        str(balcon),
-        "-o",  # STDOUT (ignored by SAPI4)
-        "-w", str(tmp_path),
-        "-t", text,
-        "-n", voice,
-    ]
-
+    # --- Attempt 1: SAPI5 path (STDOUT)
+    cmd_stdout = [str(balcon), "-o", "-t", text, "-n", voice]
     try:
-        result = await asyncio.to_thread(
+        res = await asyncio.to_thread(
             subprocess.run,
-            cmd,
+            cmd_stdout,
             check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
-
-        # Prefer STDOUT if data present (SAPI5)
-        if result.stdout:
-            return result.stdout
-
-        # Fallback to file output (SAPI4)
-        if tmp_path.exists():
-            data = tmp_path.read_bytes()
-            return data
-
-        raise SynthesisError("Balcon produced no output.")
-
+        if res.stdout:  # success w/ SAPI5
+            return res.stdout
+        # If exit 0 but no bytes, treat as unsupported and fall back
     except subprocess.CalledProcessError as e:
-        raise SynthesisError(f"Balcon failed with exit code {e.returncode}") from e
-    except Exception as e:
-        raise SynthesisError(f"Unexpected synthesis error: {e!r}") from e
+        # Fall through to file method; keep stderr for context if that fails too
+        stdout_attempt_err = e.stderr.decode(errors="ignore")[:400]
+    else:
+        stdout_attempt_err = ""  # no explicit error, just empty stdout
+
+    # --- Attempt 2: SAPI4 path (file)
+    tmp = tempfile.NamedTemporaryFile(prefix="balcon_", suffix=".wav", delete=False)
+    tmp_path = Path(tmp.name)
+    tmp.close()
+
+    cmd_file = [str(balcon), "-w", str(tmp_path), "-t", text, "-n", voice]
+    try:
+        await asyncio.to_thread(subprocess.run, cmd_file, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        data = tmp_path.read_bytes()
+        if not data:
+            raise SynthesisError("Balcon (file mode) produced an empty WAV.")
+        return data
+    except subprocess.CalledProcessError as e:
+        raise SynthesisError(
+            "Balcon failed. STDOUT mode error:\n"
+            f"{stdout_attempt_err}\n\n"
+            "File mode error:\n"
+            f"{e.stderr.decode(errors='ignore')[:400]}"
+        ) from e
     finally:
         try:
             tmp_path.unlink(missing_ok=True)
