@@ -25,8 +25,8 @@ def _balcon_path() -> Path:
 
 async def synthesize(text: str, voice: str) -> bytes:
     """
-    Synthesize `text` via Balcon using `voice` at sample rate `fr`.
-    Returns the WAV file as bytes. Temp file is deleted before returning.
+    Synthesize `text` via Balcon using either SAPI4 or SAPI5 automatically.
+    If STDOUT output is available (SAPI5), use it; otherwise fall back to temp WAV (SAPI4).
 
     Raises:
         BalconNotConfiguredError
@@ -34,23 +34,39 @@ async def synthesize(text: str, voice: str) -> bytes:
     """
     balcon: Final[Path] = _balcon_path()
 
-    # Use a temp file on disk for Balcon output, then slurp bytes and delete.
     tmp = tempfile.NamedTemporaryFile(prefix="balcon_", suffix=".wav", delete=False)
     tmp_path = Path(tmp.name)
-    tmp.close()  # we'll let Balcon write to it
+    tmp.close()
 
+    # Provide both -o and -w so SAPI5 uses STDOUT and SAPI4 uses file output.
     cmd = [
         str(balcon),
+        "-o",  # STDOUT (ignored by SAPI4)
         "-w", str(tmp_path),
         "-t", text,
         "-n", voice,
     ]
 
     try:
-        # Run the external process off the event loop
-        await asyncio.to_thread(subprocess.run, cmd, check=True)
-        data = tmp_path.read_bytes()
-        return data
+        result = await asyncio.to_thread(
+            subprocess.run,
+            cmd,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+
+        # Prefer STDOUT if data present (SAPI5)
+        if result.stdout:
+            return result.stdout
+
+        # Fallback to file output (SAPI4)
+        if tmp_path.exists():
+            data = tmp_path.read_bytes()
+            return data
+
+        raise SynthesisError("Balcon produced no output.")
+
     except subprocess.CalledProcessError as e:
         raise SynthesisError(f"Balcon failed with exit code {e.returncode}") from e
     except Exception as e:
@@ -59,5 +75,4 @@ async def synthesize(text: str, voice: str) -> bytes:
         try:
             tmp_path.unlink(missing_ok=True)
         except Exception:
-            # Last-resort cleanup failure; don't mask upstream exceptions.
             pass
