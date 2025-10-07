@@ -15,7 +15,7 @@ loader = lightbulb.Loader()
 class George(
     lightbulb.SlashCommand,
     name="george",
-    description="Speak using George's voice",
+    description="Speak using George's voice (BART Platform)",
 ):
     text = lightbulb.string("text", 'What you want George to say')
 
@@ -29,7 +29,7 @@ class George(
 class Gracie(
     lightbulb.SlashCommand,
     name="gracie",
-    description="Speak using Gracie's voice",
+    description="Speak using Gracie's voice (BART Platform)",
 ):
     text = lightbulb.string("text", 'What you want Gracie to say')
 
@@ -43,7 +43,7 @@ class Gracie(
 class Sharon(
     lightbulb.SlashCommand,
     name="sharon",
-    description="Speak using Sharon's voice",
+    description="Speak using Sharon's voice (BART Train)",
 ):
     text = lightbulb.string("text", 'What you want Sharon to say')
 
