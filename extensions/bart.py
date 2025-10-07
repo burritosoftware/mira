@@ -5,7 +5,7 @@ import sys
 sys.path.append("..")
 
 from helpers import (
-    lucent,
+    sapi,
     naturalreaders
 )
 
@@ -22,7 +22,7 @@ class George(
     @lightbulb.invoke
     async def invoke(self, ctx: lightbulb.Context) -> None:
         await ctx.defer()
-        wav = await lucent.synthesize(text=self.text, voice="John-TED :: John-TED")
+        wav = await sapi.synthesize(text=self.text, voice="John-TED :: John-TED")
         await ctx.respond(attachments=[hikari.Bytes(wav, "george.wav")])
 
 @loader.command()
@@ -36,7 +36,7 @@ class Gracie(
     @lightbulb.invoke
     async def invoke(self, ctx: lightbulb.Context) -> None:
         await ctx.defer()
-        wav = await lucent.synthesize(text=self.text, voice="Grace-TED :: Grace-TED")
+        wav = await sapi.synthesize(text=self.text, voice="Grace-TED :: Grace-TED")
         await ctx.respond(attachments=[hikari.Bytes(wav, "gracie.wav")])
 
 @loader.command()
