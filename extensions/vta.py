@@ -21,5 +21,5 @@ class Samantha(
     @lightbulb.invoke
     async def invoke(self, ctx: lightbulb.Context) -> None:
         await ctx.defer()
-        wav = await sapi.synthesize(text=self.text, voice="VEX_Samantha [English (United States)]")
+        wav = await sapi.synthesize(text=self.text, voice="VEX_Samantha")
         await ctx.respond(attachments=[hikari.Bytes(wav, "samantha.wav")])
