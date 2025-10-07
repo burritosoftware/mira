@@ -14,7 +14,7 @@ client = lightbulb.client_from_app(bot, default_enabled_guilds=[1037174936046944
 
 @bot.listen(hikari.StartingEvent)
 async def on_starting(_: hikari.StartingEvent) -> None:
-    await client.load_extensions("extensions.bart", "extensions.ping")
+    await client.load_extensions("extensions.bart", "extensions.vta")
     await client.start()
 
 bot.run()
