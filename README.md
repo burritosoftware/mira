@@ -5,7 +5,9 @@
 <h1 align="center">Mira</h1>
 
 <p align="center">
-  A modular text-to-speech Discord bot for Bay Area public transit systems. Proudly serving the <a href="https://discord.gg/bayareatransit">Bay Area Transit Discord</a>.
+  A modular text-to-speech Discord bot for Bay Area public transit systems.
+  <br>
+  Proudly serving the <a href="https://discord.gg/bayareatransit">Bay Area Transit Discord</a>.
 </p>
 
 ---
