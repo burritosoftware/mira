@@ -6,7 +6,8 @@ sys.path.append("..")
 
 from helpers import (
     sapi,
-    naturalreaders
+    naturalreaders,
+    gtts
 )
 
 loader = lightbulb.Loader()
@@ -50,5 +51,19 @@ class Sharon(
     @lightbulb.invoke
     async def invoke(self, ctx: lightbulb.Context) -> None:
         await ctx.defer()
-        wav = await naturalreaders.synthesize(text=self.text, voice="21")
-        await ctx.respond(attachments=[hikari.Bytes(wav, "sharon.mp3")])
+        mp3 = await naturalreaders.synthesize(text=self.text, voice="21")
+        await ctx.respond(attachments=[hikari.Bytes(mp3, "sharon.mp3")])
+
+@loader.command()
+class eBART(
+    lightbulb.SlashCommand,
+    name="ebart",
+    description="Speak using the eBART voice (Google/eBART Train)",
+):
+    text = lightbulb.string("text", 'What you want the eBART voice to say')
+
+    @lightbulb.invoke
+    async def invoke(self, ctx: lightbulb.Context) -> None:
+        await ctx.defer()
+        mp3 = await gtts.synthesize(text=self.text)
+        await ctx.respond(attachments=[hikari.Bytes(mp3, "ebart.mp3")])

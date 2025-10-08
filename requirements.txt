@@ -5,3 +5,6 @@ python-dotenv
 # Used by Natural Readers
 httpx
 httpx-auth
+
+# Used by eBART TTS
+gTTS
