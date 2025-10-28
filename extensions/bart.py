@@ -55,6 +55,20 @@ class Sharon(
         await ctx.respond(attachments=[hikari.Bytes(mp3, "sharon.mp3")])
 
 @loader.command()
+class Anna(
+    lightbulb.SlashCommand,
+    name="anna",
+    description="Speak using Anna's voice (eBART Platform)",
+):
+    text = lightbulb.string("text", 'What you want Anna to say')
+
+    @lightbulb.invoke
+    async def invoke(self, ctx: lightbulb.Context) -> None:
+        await ctx.defer()
+        wav = await sapi.synthesize(text=self.text, voice="Microsoft Anna")
+        await ctx.respond(attachments=[hikari.Bytes(wav, "anna.wav")])
+
+@loader.command()
 class eBART(
     lightbulb.SlashCommand,
     name="ebart",

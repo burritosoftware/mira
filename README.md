@@ -17,6 +17,7 @@
   - George (Platform)
   - Gracie (Platform)
   - Sharon (Train)
+  - Anna (eBART Platform)
   - Google (eBART Train)
 - Valley Transportation Authority (VTA)
   - Samantha
@@ -30,6 +31,9 @@
 Lucent SAPI4 voices (BART's George and Gracie) require:
 - **Active Call Center 2.6.1 Enterprise** (filename: ACC260ESDSetup.exe, SHA-1 hash `6475dd35b48c09c073bd3e82059a822099f875c2`)
 - A valid license for Active Call Center
+
+Microsoft SAPI5 voices (BART's Anna) require:
+- **Windows 7 TTS Voices**
 
 Nuance SAPI5 voices (VTA's Samantha) require:
 - **Nuance Vocalizer Expressive 5.2.3** (filename: VEX_ENU_Samantha.zip, SHA-1 hash `7f2a3bc5967ca4698f5a87ad579e76ae4a4cb4c2`)
